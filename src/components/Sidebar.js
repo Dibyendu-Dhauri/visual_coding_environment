@@ -11,7 +11,7 @@ export default function Sidebar() {
     <div className="w-60 flex-none h-full overflow-y-auto flex flex-col items-start p-2 border-r border-gray-200">
     <Motion/>
     <Looks/>
-    <Events/>
+    {/* <Events/> */}
     </div>
   );
 }

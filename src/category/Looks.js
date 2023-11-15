@@ -20,6 +20,167 @@ export default function Looks() {
   const [changeEffectValue, setChangeEffectValue] = useState("25");
   const [effect, setEffect] = useState("set-random-color");
   const [effectValue, setEffectValue] = useState("25");
+  
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData("text/plain", e.target.id);
+  };
+
+  const looks = [
+    {
+      id: "sayMsgWithTime",
+      text1: "say",
+      input1: {
+        value: sayMsgWithTime,
+        onChange: (e) => {
+          setSayMsgWithTime(e.target.value);
+          e.stopPropagation();
+        },
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+        className:
+          "bg-white text-black w-10 rounded-lg mx-1 font-semibold text-center outline-none",
+      },
+      text2: "for",
+      input2: {
+        value: sayTime,
+        onChange: (e) => {
+          setSayTime(e.target.value);
+          e.stopPropagation();
+        },
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+        className:
+          "bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+      },
+      onClick: (e) => {
+        dispatch(
+          spriteLooks({
+            msg: sayMsgWithTime,
+            time: Number(sayTime),
+            type: "sayMsgWithTime",
+            isDisplayed: true,
+            isWaiting: true,
+          })
+        );
+        setActiveSaytime(true);
+      },
+      draggable: true,
+      onDragStart: handleDragStart,
+      className: `flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg ${
+        activeSayTime ? "border-4 border-yellow-400" : ""
+      }`,
+    },
+    {
+      id: "sayMsg",
+      text1: "say",
+      draggable: true,
+      onDragStart: handleDragStart,
+      onClick: (e) => {
+        dispatch(
+          spriteLooks({
+            msg: sayMsg,
+            type: "sayMsg",
+            isDisplayed: true,
+            isWaiting: false,
+          })
+        );
+      },
+      className:
+        "flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg",
+      input1: {
+        type: "text",
+        placeholder: "hello",
+        className:
+          "bg-white text-black w-10 rounded-lg mx-1 font-semibold text-center outline-none",
+        value: sayMsg,
+        onChange: (e) => {
+          setSayMsg(e.target.value);
+        },
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+      },
+    },
+    {
+      id: "thinkMsgTime",
+      text1: "think",
+      input1: {
+        value: thinkMsgTime,
+        onChange: (e) => {
+          setThinkMsgTime(e.target.value);
+          e.stopPropagation();
+        },
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+        className:
+          "bg-white text-black w-10 rounded-lg mx-1 font-semibold text-center outline-none",
+      },
+      text2: "for",
+      input2: {
+        value: thinkTime,
+        onChange: (e) => {
+          setThinkTime(e.target.value);
+          e.stopPropagation();
+        },
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+        className:
+          "bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+      },
+      onClick: (e) => {
+        dispatch(
+          spriteLooks({
+            msg: thinkMsgTime,
+            time: Number(thinkTime),
+            isDisplayed: true,
+            isWaiting: true,
+            type: "thinkMsgWithTime",
+          })
+        );
+        setActiveThinkTime(true);
+      },
+      draggable: true,
+      onDragStart: handleDragStart,
+      className: `flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg ${
+        activeThinkTime ? "border-4 border-yellow-400" : ""
+      }`,
+    },
+    {
+      id: "thinkMsg",
+      text1: "think",
+      draggable: true,
+      onDragStart: handleDragStart,
+      onClick: (e) => {
+        dispatch(
+          spriteLooks({
+            msg: thinkMsg,
+            type: "thinkMsg",
+            isDisplayed: true,
+            isWaiting: false,
+          })
+        );
+      },
+      className:
+        "flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg",
+      input1: {
+        type: "text",
+        placeholder: "hello",
+        className:
+          "bg-white text-black w-10 rounded-lg mx-1 font-semibold text-center outline-none",
+        value: sayMsg,
+        onChange: (e) => {
+          setThinkMsg(e.target.value);
+        },
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+      },
+    },
+  ];
 
   useEffect(() => {
     const timeId = setTimeout(() => {
@@ -45,14 +206,26 @@ export default function Looks() {
     return newColor;
   };
 
-  const handleDrag = (e) => {
-    e.dataTransfer.setData("text/plain", e.target.id);
-  };
   return (
     <>
       <div className="font-bold"> {"Looks"} </div>
+
+      {looks.map((divData) => (
+        <div
+          key={divData.id}
+          className="flex flex-row items-center flex-wrap bg-pink-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg move"
+          {...divData}
+        >
+          {divData.text1}
+
+          {divData.input1 && <input type="text" {...divData.input1} />}
+
+          {divData.text2}
+          {divData.input2 && <input type="text" {...divData.input2} />}
+        </div>
+      ))}
       {/* say hello for 2 sec */}
-      <div
+      {/* <div
         className={`flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg ${
           activeSayTime ? "border-4 border-yellow-400" : ""
         }`}
@@ -89,10 +262,10 @@ export default function Looks() {
           onClick={(e) => e.stopPropagation()}
         />
         {"seconds"}&nbsp;
-      </div>
+      </div> */}
 
       {/* say hello */}
-      <div
+      {/* <div
         className="flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(
@@ -117,10 +290,10 @@ export default function Looks() {
           onChange={(e) => setSayMsg(e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
-      </div>
+      </div> */}
 
       {/* think hmm for 2 sec */}
-      <div
+      {/* <div
         className={`flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg ${
           activeThinkTime ? "border-4 border-yellow-400" : ""
         }`}
@@ -157,11 +330,11 @@ export default function Looks() {
           onClick={(e) => e.stopPropagation()}
         />
         {"seconds"}&nbsp;
-      </div>
+      </div> */}
 
       {/* think hmm */}
 
-      <div
+      {/* <div
         className="flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(
@@ -185,10 +358,10 @@ export default function Looks() {
           onChange={(e) => setThinkMsg(e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
-      </div>
+      </div> */}
 
       {/* switch costume */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         id="switchCostume"
         draggable
@@ -203,17 +376,17 @@ export default function Looks() {
             costume2
           </option>
         </select>
-      </div>
+      </div> */}
 
       {/* next costume */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         id="nextCostume"
         draggable
         onDragStart={handleDrag}
       >
         {"next costume"}
-      </div>
+      </div> */}
 
       {/* switch backdrop to */}
       {/* <div className="flex flex-row flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg">
@@ -240,7 +413,7 @@ export default function Looks() {
       </div> */}
 
       {/* change size by 10 */}
-      <div
+      {/* <div
         className="flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(
@@ -259,10 +432,10 @@ export default function Looks() {
           onChange={(e) => setChangeSize(e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
-      </div>
+      </div> */}
 
       {/* set size to 100% */}
-      <div
+      {/* <div
         className="flex flex-row items-center flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(
@@ -285,10 +458,10 @@ export default function Looks() {
           onClick={(e) => e.stopPropagation()}
         />
         &nbsp;{"%"}
-      </div>
+      </div> */}
 
       {/* change color effect by 25 */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap  bg-purple-500 text-white px-1 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(
@@ -330,10 +503,10 @@ export default function Looks() {
           onChange={(e) => setChangeEffectValue(e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
-      </div>
+      </div> */}
 
       {/* set color effect to */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap  bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(spriteLooks({ value: Number(effectValue), type: effect }))
@@ -369,10 +542,10 @@ export default function Looks() {
           onChange={(e) => setEffectValue(e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
-      </div>
+      </div> */}
 
       {/* clear graphics effects */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(spriteLooks({ type: "clear-graphics-effects" }))
@@ -382,10 +555,10 @@ export default function Looks() {
         onDragStart={handleDrag}
       >
         {"clear graphics effects"}
-      </div>
+      </div> */}
 
       {/* show */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() =>
           dispatch(spriteLooks({ isShowed: true, type: "visible" }))
@@ -395,10 +568,10 @@ export default function Looks() {
         onDragStart={handleDrag}
       >
         {"show"}
-      </div>
+      </div> */}
 
       {/* hide */}
-      <div
+      {/* <div
         className="flex flex-row flex-wrap bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() => dispatch(spriteLooks({ isShowed: false, type: "hide" }))}
         id="hide"
@@ -406,7 +579,7 @@ export default function Looks() {
         onDragStart={handleDrag}
       >
         {"hide"}
-      </div>
+      </div> */}
 
       {/* got to fron layer */}
       {/* <div className="flex flex-row flex-wrap  bg-purple-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg">
@@ -441,7 +614,7 @@ export default function Looks() {
         &nbsp;{"layer"}
       </div> */}
       {/* checkbox */}
-      <div className="text-xs my-4 flex flex-col justify-between">
+      {/* <div className="text-xs my-4 flex flex-col justify-between">
         <label>
           <input
             type="checkbox"
@@ -460,7 +633,7 @@ export default function Looks() {
           </span>
         </label>
         <br />
-      </div>
+      </div> */}
     </>
   );
 }

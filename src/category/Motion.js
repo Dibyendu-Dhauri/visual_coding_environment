@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Icon from "../components/Icon";
 import { useDispatch, useSelector } from "react-redux";
 import { spriteMotion } from "../features/motionSlice";
+// import { motionData } from "../data/motionData";
 
 export default function Motion() {
   const data = useSelector((state) => state.motion);
@@ -36,341 +37,423 @@ export default function Motion() {
 
   const handleDragStart = (e) => {
     e.dataTransfer.setData("text/plain", e.target.id);
+    // console.log(e.target.id)
   };
+
+  const motionData = [
+    {
+      id: "moveSteps",
+      text1: "Move ",
+      input1: {
+         value:value,
+        onChange: (e) => {
+          e.stopPropagation();
+          setValue(e.target.value);
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        },
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
+      },
+      onClick: (e)=>{
+        dispatch(spriteMotion({ value: Number(value), type: "moveforward" }))
+      },
+      text2: " steps",
+      draggable: true,
+      onDragStart: handleDragStart,
+    },
+    {
+      id: "antiRotate",
+      text1: "Turn ",
+      icon: <Icon name="undo" size={15} className="text-white mx-2" />,
+      input1: {
+        value: antiRotate,
+        onChange: (e) => {
+          e.stopPropagation();
+          setAntiRotate(e.target.value);
+        },
+        onClick:(e)=>{
+           e.stopPropagation();
+        },
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+      },
+      onClick: (e)=>{
+        dispatch(
+          spriteMotion({
+            value: Number(antiRotate),
+            type: "rotateAntiClockWise",
+          })
+        )
+      },
+      text2: " degrees",
+      draggable: true,
+      onDragStart: handleDragStart,
+    },
+    {
+      id: "rotate",
+      text1: "Turn ",
+      icon: <Icon name="redo" size={15} className="text-white mx-2" />,
+      input1: {
+        value: rotate,
+        onChange: (e) => {
+          e.stopPropagation();
+          setRotate(e.target.value);
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        },
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
+      },
+      onClick: (e)=>{
+        dispatch(
+          spriteMotion({
+            value: Number(rotate),
+            type: "rotateClockWise",
+          })
+        )
+      },
+      text2: " degrees",
+      draggable: true,
+      onDragStart: handleDragStart,
+    },
+    {
+      id: "selectedOption",
+      text1: "go to ",
+      select1: {
+        value: selectedOption,
+        onChange: (e) => {
+          e.stopPropagation();
+          setSelectedOption(e.target.value);
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        },
+        className:"bg-blue-700 text-white rounded-lg mx-1 px-1 outline-none",
+
+      },
+      option1:{
+        value:"random-position",
+          text: 'random-position',
+      },
+      option2:{
+        value:"mouse-pointer",
+        text: ' mouse-pointer',
+      },
+      onClick:(e)=>{
+        dispatch(spriteMotion({ type: selectedOption }))
+      },
+      draggable: true,
+      onDragStart: handleDragStart,
+    },
+    {
+      id:"goToXandY",
+      text1:'go to X: ',
+      input1:{
+        value:inputX,
+        onChange:(e)=>{
+          setInputX(e.target.value);
+        },
+        onClick:(e)=>{
+          e.stopPropagation()
+        },
+        className:'bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none',
+      },
+      text2:'Y:',
+      input2:{
+        value:inputY,
+        onChange:(e)=>{
+          setInputY(e.target.value);
+        },
+        onClick:(e)=>{
+          e.stopPropagation()
+        },
+        className:'bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none'
+      },
+      onClick:(e)=>{
+        dispatch(
+          spriteMotion({
+            valueX: Number(inputX),
+            valueY: Number(inputY),
+            type: "goToXandY",
+          })
+        )
+      },
+      draggable: true,
+      onDragStart: handleDragStart,
+    },
+    {
+      id:'moveWithDuration',
+      text1:'glide',
+      draggable: true,
+      onDragStart: handleDragStart,
+      onClick:()=>{
+        dispatch(
+          spriteMotion({ value: Number(duration), type: selectedOptionTime })
+        )
+      },
+      input1:{
+        type:'text',
+        className:"bg-white text-black w-6 rounded-lg  font-semibold text-center outline-none text-xs",
+        value:duration,
+        onChange:(e)=>{
+          setDuration(e.target.value);
+          e.stopPropagation();
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        },
+      },
+      text2:"sec to",
+      select1:{
+        className:"bg-blue-700 text-white rounded-lg  outline-none text-xs w-16",
+        value:selectedOption,
+        onChange:(e)=>{
+          setSelectedOptionTime(e.target.value);
+          e.stopPropagation();
+        },
+        onClick:(e)=>{
+          e.stopPropagation()
+        },
+      },
+      option1:{
+        value:'random-position-withDuration',
+        text:'random position'
+      },
+      option2:{
+        value:'mouse-pointer-withDuration',
+        text:"mouse-pointer"
+      },
+    },
+    {
+      id:"moveWithDurationXandY",
+      text1:"glide",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:()=>{
+        dispatch(
+          spriteMotion({
+            valueX: Number(inputXTime),
+            valueY: Number(inputYTime),
+            type: "goToXandYWithTime",
+            withDuration: Number(durationXY),
+          })
+        )
+      },
+      input1:{
+        className:'bg-white text-black w-6 rounded-lg font-semibold  text-center outline-none text-xs',
+        value:durationXY,
+        onChange:(e)=>{
+          setDurationXY(e.target.value)
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        },
+
+      },
+      text2:"sec to x:",
+      input2:{
+        className:"bg-white text-black w-8 rounded-lg font-semibold text-center outline-none",
+        value:inputXTime,
+        onChange:(e)=>{
+          setInputXTime(e.target.value)
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        }
+      },
+      text3:"Y:",
+      input3:{
+        className:"bg-white text-black w-8 rounded-lg font-semibold text-center outline-none",
+        value:inputYTime,
+        onChange:(e)=>{
+          setInputYTime(e.target.value)
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        }
+      }
+    },
+    {
+      id:"pointToDirection",
+      text1:"point in direction",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:(e)=>{
+        dispatch(
+          spriteMotion({ value: Number(direction), type: "pointInDirection" })
+        )
+      },
+      input1:{
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+        value:direction,
+        onChange:(e)=>{
+          setDirection(e.target.value)
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        }
+      }
+    },
+    {
+      id:"pointToMousePointer",
+      text1:"point towards",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:(e)=>{
+        dispatch(spriteMotion({ type: "pointInMousePointer" }))
+      },
+      select1:{
+        className:"bg-blue-700 text-white rounded-lg ml-1 outline-none text-xs"
+      },
+      option1:{
+        value:"mouse-pointer-withDuration",
+        text:"mouse-pointer"
+      }
+    },
+    {
+      id:"changeXBy",
+      text1:"change X by",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:(e)=>{
+        dispatch(
+          spriteMotion({ value: Number(changeXBy), type: "changeXBy" })
+        )
+      },
+      input1:{
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+        value:changeXBy,
+        onChange:(e)=>{
+          setChangeXBy(e.target.value)
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        }
+      }
+    },
+    {
+      id:"setXBy",
+      text1:"set x to:",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:(e)=>{
+        dispatch(spriteMotion({ value: Number(changeXTo), type: "setXBy" }))
+      },
+      input1:{
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+        value:changeXTo,
+        onChange:(e)=>{
+          setChangeXTo(e.target.value)
+        },
+        onClick:(e)=>{e.stopPropagation()}
+      }
+    },
+    {
+      
+      id:"changeYBy",
+      text1:"change y by",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:(e)=>{
+        dispatch(
+          spriteMotion({ value: Number(changeYBy), type: "changeYBy" })
+        )
+      },
+      input1:{
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+        value:changeYBy,
+        onChange:(e)=>{
+          setChangeYBy(e.target.value)
+        },
+        onClick:(e)=>{
+          e.stopPropagation();
+        }
+      }
+    },
+    {
+      
+      id:"setYBy",
+      text1:"set y to:",
+      draggable:true,
+      onDragStart:handleDragStart,
+      onClick:(e)=>{
+        dispatch(spriteMotion({ value: Number(changeYTo), type: "setYBy" }))
+      },
+      input1:{
+        className:"bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none",
+        value:changeYTo,
+        onChange:(e)=>{
+          setChangeYTo(e.target.value)
+        },
+        onClick:(e)=>{e.stopPropagation()}
+      }
+    }
+  ]
+  
   return (
     <>
       <div className="font-bold"> {"Motion"} </div>
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg move"
-        onClick={() =>
-          dispatch(spriteMotion({ value: Number(value), type: "moveforward" }))
-        }
-        id="moveSteps"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"Move "}
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => {
-            e.stopPropagation();
-            setValue(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-        />
-        {" steps"}
-      </div>
-
-      <div
-        className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(
-            spriteMotion({
-              value: Number(antiRotate),
-              type: "rotateAntiClockWise",
-            })
-          )
-        }
-        id="antiRotate"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"Turn "}
-        <Icon name="undo" size={15} className="text-white mx-2" />
-        <input
-          type="text"
-          value={antiRotate}
-          onChange={(e) => {
-            e.stopPropagation();
-            setAntiRotate(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-        />
-        {" degrees"}
-      </div>
-
-      <div
-        className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() => {
-          dispatch(
-            spriteMotion({ value: Number(rotate), type: "rotateClockWise" })
-          );
-        }}
-        id="rotate"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"Turn "}
-        <Icon name="redo" size={15} className="text-white mx-2" />
-        <input
-          type="text"
-          value={rotate}
-          onChange={(e) => {
-            e.stopPropagation();
-            setRotate(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-        />
-        {" degrees"}
-      </div>
-
-      <div
-        className="flex flex-row flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() => dispatch(spriteMotion({ type: selectedOption }))}
-        id="selectedOption"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"go to "}
-        <select
-          className="bg-blue-700 text-white rounded-lg mx-1 px-1 outline-none"
-          value={selectedOption}
-          onChange={(e) => {
-            e.stopPropagation();
-            setSelectedOption(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
+     
+      {motionData.map((divData) => (
+        <div
+          key={divData.id}
+          className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg move"
+          {...divData}
         >
-          <option className="text-xs " value="random-position">
-            random position
-          </option>
-          <option className="text-xs " value="mouse-pointer">
-            mouse-pointer
-          </option>
-        </select>
-      </div>
-      {/* goToXandY */}
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(
-            spriteMotion({
-              valueX: Number(inputX),
-              valueY: Number(inputY),
-              type: "goToXandY",
-            })
-          )
-        }
-        id="goToXandY"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"go to X: "}
-        <input
-          type="text"
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={inputX}
-          onChange={(e) => {
-            setInputX(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-        {"Y: "}
-        <input
-          type="text"
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={inputY}
-          onChange={(e) => {
-            setInputY(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
+          {divData.text1}
+          {divData.icon}
+          {divData.input1 && (
+          <input
+            type="text"
+            {...divData.input1}
+            
+          />
+          )}
+          {divData.select1 && (
+            <select {...divData.select1}>
+            {divData.option1 && (
 
-      <div
-        className="flex flex-row items-center   flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg "
-        onClick={() =>
-          dispatch(
-            spriteMotion({ value: Number(duration), type: selectedOptionTime })
-          )
-        }
-        id="moveWithDuration"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"glide"}&nbsp;
-        <input
-          type="text"
-          className="bg-white text-black w-6 rounded-lg  font-semibold text-center outline-none text-xs"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-        {"sec to"}
-        <select
-          className="bg-blue-700 text-white rounded-lg  outline-none text-xs w-16 "
-          value={selectedOptionTime}
-          onChange={(e) => {
-            e.stopPropagation();
-            setSelectedOptionTime(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <option value="random-position-withDuration">random position</option>
-          <option value="mouse-pointer-withDuration">mouse-pointer</option>
-        </select>
-      </div>
+              <option  value={divData.option1.value} 
+              onClick={(e)=>e.stopPropagation()}>
+                {divData.option1.text}
+              </option>
+            )}
+            {divData.option2 && (
 
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(
-            spriteMotion({
-              valueX: Number(inputXTime),
-              valueY: Number(inputYTime),
-              type: "goToXandYWithTime",
-              withDuration: Number(durationXY),
-            })
-          )
-        }
-        id="moveWithDurationXandY"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"glide"}&nbsp;
-        <input
-          type="text"
-          className="bg-white text-black w-6 rounded-lg font-semibold  text-center outline-none text-xs"
-          value={durationXY}
-          onChange={(e) => setDurationXY(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-        &nbsp;{"sec to x:"}&nbsp;
-        <input
-          type="text"
-          className="bg-white text-black w-8 rounded-lg font-semibold text-center outline-none"
-          value={inputXTime}
-          onChange={(e) => {
-            setInputXTime(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-        &nbsp;{"y:"}&nbsp;
-        <input
-          type="text"
-          className="bg-white text-black w-8 rounded-lg font-semibold text-center outline-none"
-          value={inputYTime}
-          onChange={(e) => {
-            setInputYTime(e.target.value);
-          }}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
+              <option  value={divData.option2.value}
+              onClick={(e)=>e.stopPropagation()}>
+                {divData.option2.text}
+              </option>
+            )}
+           
+            </select>
+          )}
+          {divData.text2}
+          {divData.input2 && (
+          <input
+            type="text"
+            {...divData.input2}
+            
+          />
+          )}
 
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(
-            spriteMotion({ value: Number(direction), type: "pointInDirection" })
-          )
-        }
-        id="pointToDirection"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"point in direction"}&nbsp;
-        <input
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={direction}
-          onChange={(e) => setDirection(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
+          {divData.text3}
+          {divData.input3 && (
+          <input
+            type="text"
+            {...divData.input3}
+            
+          />
+          )}
 
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() => dispatch(spriteMotion({ type: "pointInMousePointer" }))}
-        id="pointToMousePointer"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"point towards"}&nbsp;
-        <select className="bg-blue-700 text-white rounded-lg ml-1 outline-none text-xs">
-          <option value="mouse-pointer-withDuration">mouse-pointer</option>
-        </select>
-      </div>
+        </div>
+      ))}
 
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(
-            spriteMotion({ value: Number(changeXBy), type: "changeXBy" })
-          )
-        }
-        id="changeXBy"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"change X by"}&nbsp;
-        <input
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={changeXBy}
-          onChange={(e) => setChangeXBy(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
 
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(spriteMotion({ value: Number(changeXTo), type: "setXBy" }))
-        }
-        id="setXBy"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"set x to: "}&nbsp;
-        <input
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={changeXTo}
-          onChange={(e) => setChangeXTo(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
+      
+     
 
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(
-            spriteMotion({ value: Number(changeYBy), type: "changeYBy" })
-          )
-        }
-        id="changeYBy"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"change y by"}&nbsp;
-        <input
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={changeYBy}
-          onChange={(e) => setChangeYBy(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-      {/* set y to */}
-      <div
-        className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
-        onClick={() =>
-          dispatch(spriteMotion({ value: Number(changeYTo), type: "setYBy" }))
-        }
-        id="setYBy"
-        draggable
-        onDragStart={handleDragStart}
-      >
-        {"set y to: "}&nbsp;
-        <input
-          className="bg-white text-black w-8 rounded-lg mx-2 font-semibold text-center outline-none"
-          value={changeYTo}
-          onChange={(e) => setChangeYTo(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-
-      <div
+      {/* <div
         className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         onClick={() => dispatch(spriteMotion({ type: "edgeBounce" }))}
         id="edgeBounce"
@@ -378,9 +461,9 @@ export default function Motion() {
         onDragStart={handleDragStart}
       >
         {"if on edge,bounce"}
-      </div>
+      </div> */}
 
-      <div
+      {/* <div
         className="flex flex-row items-center flex-wrap bg-blue-500 text-white px-2 py-1 my-2 text-xs cursor-pointer rounded-lg"
         id="changeDir"
         draggable
@@ -392,9 +475,9 @@ export default function Motion() {
           <option value="mouse-pointer-withDuration">don't rotate</option>
           <option value="mouse-pointer-withDuration">all around</option>
         </select>
-      </div>
+      </div> */}
 
-      <div className="text-xs my-4 flex flex-col justify-between">
+      {/* <div className="text-xs my-4 flex flex-col justify-between">
         <label>
           <input
             type="checkbox"
@@ -453,7 +536,7 @@ export default function Motion() {
           </span>
         </label>
         <br />
-      </div>
+      </div> */}
     </>
   );
 }
